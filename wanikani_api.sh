@@ -1,14 +1,13 @@
 #!/bin/bash
 
-set -e -o pipefail
+set -e -E -o pipefail
+trap 'error "linenumber: $LINENO"' ERR
 
 # a library of functions for interacting with wanikani's api
 
 API_ROOT="https://api.wanikani.com/v2"
 
 HEADERS=(
-    -H "\"Wanikani-Revision: $(jq -r '.api_version' config.json)\""
-    -H "\"Authorization: Bearer $(jq -r '.api_key' config.json)\""
 )
 
 wanikani::subjects() {
@@ -70,10 +69,21 @@ hidden() {
     echo "$(cat -)&${FUNCNAME[0]}=$1"
 }
 
+# Initiates API call
+# $1: url from builder pattern
+build() {
+    (( "$#" == 1 )) ||
+        error "Invalid number of parameters. (given $#, expected 1)"
+    curl "$1" \
+        -H "Wanikani-Revision: $(jq -r '.api_version' config.json)" \
+        -H "Authorization: Bearer $(jq -r '.api_key' config.json)"
+    echo $?
+}
+
 error() {
     >&2 echo -e "From function: ${FUNCNAME[1]}\n$1"
     exit 1
 }
 
-url="$(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})"
-echo "\"$url\"" "${HEADERS[@]}"
+build ""
+build $(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})
