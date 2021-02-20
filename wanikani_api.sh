@@ -7,9 +7,6 @@ trap 'error "linenumber: $LINENO"' ERR
 
 API_ROOT="https://api.wanikani.com/v2"
 
-HEADERS=(
-)
-
 wanikani::subjects() {
     echo "$API_ROOT/subjects?"
 }
@@ -85,5 +82,4 @@ error() {
     exit 1
 }
 
-build ""
-build $(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})
+build "$(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})"
