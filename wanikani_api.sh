@@ -7,12 +7,16 @@ trap 'error "linenumber: $LINENO"' ERR
 
 API_ROOT="https://api.wanikani.com/v2"
 
+wanikani::assignments() {
+    echo "$API_ROOT/assignments?"
+}
+
 wanikani::subjects() {
     echo "$API_ROOT/subjects?"
 }
 
-wanikani::assignments() {
-    echo "$API_ROOT/assignments?"
+wanikani::user() {
+    echo "$API_ROOT/user?"
 }
 
 # Return subjects of the specified types.
@@ -74,7 +78,6 @@ build() {
     curl "$1" \
         -H "Wanikani-Revision: $(jq -r '.api_version' config.json)" \
         -H "Authorization: Bearer $(jq -r '.api_key' config.json)"
-    echo $?
 }
 
 error() {
@@ -82,4 +85,6 @@ error() {
     exit 1
 }
 
-build "$(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})"
+# build "$(wanikani::subjects | types kanji vocabulary | hidden true | levels {1..2})"
+# build "$(wanikani::subjects | types kanji vocabulary | hidden false | levels {1..2})"
+# build "https://api.wanikani.com/v2/subjects?page_after_id=500"

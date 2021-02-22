@@ -29,7 +29,6 @@ source wanikani_api.sh
     #[[ $BATS_RUN_SKIPPED == "true" ]] || skip
     run hidden <<< ""
     (( status == 1 ))
-    echo $output
     [[ $output == *"Invalid number of parameters. (given 0, expected 1)"* ]]
 }
 
