@@ -29,8 +29,9 @@ jobs:
         # uses: ludeeus/action-shellcheck@d586102c117f97e63d7e3b56629d269efc9a7c60
         uses: ludeeus/action-shellcheck@1.0.0
         with:
-          check-together: 'yes'
           severity: info
+        env:
+         SHELLCHECK_OPTS: -x
       
       - name: Setup BATS testing framework
         # uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d
